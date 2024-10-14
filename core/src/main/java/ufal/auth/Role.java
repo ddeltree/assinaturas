@@ -11,11 +11,10 @@ public class Role {
     this.name = name;
   }
 
-  public void setPermissions(Permission... permissions) {
-    for (Permission p : permissions) {
-      System.out.println(p.getAction());
+  public Role setPermissions(Permission... permissions) {
+    for (Permission p : permissions)
       this.permissions.add(p);
-    }
+    return this;
   }
 
   public Set<Permission> getPermissions() {

@@ -1,7 +1,7 @@
 package ufal;
 
 public final class Sistema {
-  static void listUsers() {
-
+  static String listUsers() {
+    return "";
   }
 }
