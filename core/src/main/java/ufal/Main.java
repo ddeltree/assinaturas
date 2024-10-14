@@ -5,14 +5,18 @@ import ufal.auth.*;
 
 public class Main {
     static Map<ActionID, Action> actionMap = new HashMap<>();
+    final static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        var sc = new Scanner(System.in);
-        initialize();
-        askCredentials(sc);
+        try {
+            initialize();
+            askCredentials();
+        } finally {
+            sc.close();
+        }
     }
 
-    static void askCredentials(Scanner sc) {
+    static void askCredentials() {
         int option = 0;
         do {
             System.out.println("* (1) - LOGIN");
@@ -20,13 +24,13 @@ public class Main {
             System.out.println("* (0) - sair");
             option = sc.nextInt();
             if (option == 1)
-                loginScreen(sc);
+                loginScreen();
             else if (option == 2)
-                signupScreen(sc);
+                signupScreen();
         } while (option != 0);
     }
 
-    static User signupScreen(Scanner sc) {
+    static User signupScreen() {
         System.out.println("--- CADASTRO ---");
         String email;
         do {
@@ -42,7 +46,7 @@ public class Main {
         return user;
     }
 
-    static User loginScreen(Scanner sc) {
+    static User loginScreen() {
         System.out.println("--- LOGIN ---");
         User user = null;
         do {
