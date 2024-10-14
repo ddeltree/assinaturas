@@ -10,7 +10,7 @@ public class PermissionTests {
 
   @Test
   public void basic() {
-    Main.initializeActions();
+    Main.initialize();
 
     var user = new User("1", "Davi");
     var role = new Role("ADMIN")
