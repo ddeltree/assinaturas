@@ -10,24 +10,31 @@ public class Main {
     public static void main(String[] args) {
         try {
             initialize();
-            askCredentials();
+            var user = askCredentials();
+            if (user != null)
+                System.out.println(user.getRoles());
         } finally {
             sc.close();
         }
     }
 
-    static void askCredentials() {
+    static User askCredentials() {
         int option = 0;
+        User user = null;
+        boolean isSignedIn = false;
         do {
             System.out.println("* (1) - LOGIN");
             System.out.println("* (2) - CADASTRO");
             System.out.println("* (0) - sair");
             option = sc.nextInt();
-            if (option == 1)
-                loginScreen();
-            else if (option == 2)
-                signupScreen();
-        } while (option != 0);
+            if (option == 1) {
+                user = loginScreen();
+                isSignedIn = true;
+            } else if (option == 2) {
+                user = signupScreen();
+            }
+        } while (!isSignedIn && option != 0);
+        return user;
     }
 
     static User signupScreen() {
