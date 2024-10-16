@@ -1,35 +1,44 @@
 package ufal;
 
-import java.util.*;
+public class Plano {
+    private String nome;
+    private double preco;
+    private String periodoPagamento;
 
-public final class Sistema {
-  private static final Map<String, User> userMap = new HashMap<>();
+    public Plano(String nome, double preco, String periodoPagamento) {
+        if (preco <= 0) {
+            throw new IllegalArgumentException("O preço deve ser maior que zero.");
+        }
+        if (nome == null || nome.isEmpty()) {
+            throw new IllegalArgumentException("O nome do plano não pode ser vazio.");
+        }
+        this.nome = nome;
+        this.preco = preco;
+        this.periodoPagamento = periodoPagamento;
+    }
 
-  static List<User> listUsers() {
-    return userMap.values().stream().toList();
-  }
+    public String getNome() {
+        return nome;
+    }
 
-  static User signupUser(String email, String password) {
-    // TODO: validar entrada
-    if (!userMap.containsKey(email))
-      userMap.put(email, new User(email, password));
-    return userMap.get(email);
-  }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-  static User loginUser(String email, String password) {
-    if (!userMap.containsKey(email))
-      return null;
-    var user = userMap.get(email);
-    if (!user.verifyLogin(email, password))
-      return null;
-    return user;
-  }
+    public double getPreco() {
+        return preco;
+    }
 
-  static boolean doesUserExist(String email) {
-    return userMap.containsKey(email);
-  }
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
 
-  static boolean doesUserExist(User user) {
-    return userMap.containsValue(user);
-  }
+    public String getPeriodoPagamento() {
+        return periodoPagamento;
+    }
+
+    public void setPeriodoPagamento(String periodoPagamento) {
+        this.periodoPagamento = periodoPagamento;
+    }
 }
+
