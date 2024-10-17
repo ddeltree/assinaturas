@@ -6,9 +6,7 @@ public final class Sistema {
     private static final Map<String, Usuario> userMap = new HashMap<>();
     private static final Map<String, Plano> planoMap = new HashMap<>();
 
-    static List<Usuario> listUsers() {
-        return userMap.values().stream().toList();
-    }
+    // CADASTRO
 
     static Usuario signupUser(String email, String password) {
         if (!userMap.containsKey(email))
@@ -32,6 +30,62 @@ public final class Sistema {
     static boolean doesUserExist(Usuario user) {
         return userMap.containsValue(user);
     }
+
+    // ADMINISTRADOR
+
+    static List<Usuario> listarUsuarios() {
+        return userMap.values().stream().toList();
+    }
+
+    //
+
+    static Servico criarServico(String nome) {
+        return new Servico(nome);
+    }
+
+    static Servico buscarServico(String id) {
+        var servico = listarServicos().stream().filter(s -> s.id.equals(id)).findFirst();
+        if (!servico.isPresent())
+            throw new IllegalArgumentException("Serviço inexistente!");
+        return servico.get();
+    }
+
+    static List<Servico> listarServicos() {
+        return Servico.servicos;
+    }
+
+    static void atualizarServico(String id, String novoNome) {
+        buscarServico(id).atualizarNome(novoNome);
+    }
+
+    static void excluirServico(String id) {
+        listarServicos().remove(buscarServico(id));
+    }
+
+    //
+
+    static Plano criarPlano(String idServico, String nome, double preco, int periodoPagamento) {
+        return new Plano(buscarServico(idServico), idServico, preco, periodoPagamento);
+    }
+
+    static Plano buscarPlano(String idServico, String idPlano) {
+        var plano = buscarServico(idServico).planos.stream().filter(p -> p.id.equals(idPlano)).findFirst();
+        return plano.isPresent() ? plano.get() : null;
+    }
+
+    static void atualizarPlano(String idServico, String idPlano, String nome, double preco, int periodoPagamento) {
+        buscarPlano(idServico, idPlano).setNome(nome).setPrecoEmReais(preco)
+                .setIntervaloPagamentoEmMeses(periodoPagamento);
+    }
+
+    static void excluirPlano(String idServico, String idPlano) {
+        var servico = buscarServico(idServico);
+        var plano = buscarPlano(idPlano);
+        if (plano != null && servico != null && servico.planos.contains(plano))
+            servico.planos.remove(plano);
+    }
+
+    // CLIENTE
 
     public static void criarPlano(Servico servico, String nome, double preco, int periodoPagamento) {
         if (planoMap.containsKey(nome)) {

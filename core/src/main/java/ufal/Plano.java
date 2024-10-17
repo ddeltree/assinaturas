@@ -3,6 +3,7 @@ package ufal;
 import java.util.*;
 
 public class Plano {
+    public final String id;
     private String nome;
     private double precoEmReais;
     private int intervaloPagamentoEmMeses;
@@ -18,6 +19,7 @@ public class Plano {
         }
         if (servico != null)
             servico.planos.add(this);
+        this.id = UUID.randomUUID().toString();
         this.servico = servico;
         this.nome = nome;
         this.precoEmReais = preco;
@@ -28,25 +30,28 @@ public class Plano {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public Plano setNome(String nome) {
         this.nome = nome;
+        return this;
     }
 
     public double getPrecoEmReais() {
         return precoEmReais;
     }
 
-    public void setPrecoEmReais(double preco) {
+    public Plano setPrecoEmReais(double preco) {
         this.precoEmReais = Math.max(0, preco);
+        return this;
     }
 
     public int getIntervaloPagamentoEmMeses() {
         return intervaloPagamentoEmMeses;
     }
 
-    public void setIntervaloPagamentoEmMeses(int meses) {
+    public Plano setIntervaloPagamentoEmMeses(int meses) {
         if (meses <= 0)
             throw new IllegalArgumentException("O período de pagamento não pode ser menor que 1 mês");
         this.intervaloPagamentoEmMeses = meses;
+        return this;
     }
 }

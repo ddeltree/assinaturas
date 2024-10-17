@@ -69,7 +69,7 @@ public class Main {
     }
 
     static void initialize() {
-        actionMap.put(ActionID.LIST_USERS, Sistema::listUsers);
+        actionMap.put(ActionID.LIST_USERS, Sistema::listarUsuarios);
         var adminRole = new Role("ADMIN");
         var clienteRole = new Role("CLIENTE");
     }
