@@ -2,6 +2,7 @@ package ufal;
 
 import java.util.*;
 
+import ufal.auth.Action;
 import ufal.auth.RoleNames;
 
 public final class Sistema {
@@ -47,12 +48,14 @@ public final class Sistema {
 
     // ADMINISTRADOR
 
-    static List<Usuario> listarUsuarios() {
+    static List<Usuario> listarUsuarios(String uid) {
+        checarPermissoes(uid, Action.LISTAR_USUARIOS);
         return userMap.values().stream().toList();
     }
 
     static Usuario buscarUsuario(String uid) {
-        return listarUsuarios().stream().filter(u -> u.getUID().equals(uid)).findFirst().get();
+        checarPermissoes(uid, Action.IS_CLIENTE);
+        return listarUsuarios(uid).stream().filter(u -> u.getUID().equals(uid)).findFirst().get();
     }
 
     static boolean isCliente(String uid) {
@@ -66,11 +69,13 @@ public final class Sistema {
         }
     }
 
-    static Servico criarServico(String nome, TipoServico tipo) {
+    static Servico criarServico(String uid, String nome, TipoServico tipo) {
+        checarPermissoes(uid, Action.CRIAR_SERVICO);
         return new Servico(nome, tipo);
     }
 
-    static Servico buscarServico(String id) {
+    static Servico buscarServico(String uid, String id) {
+        checarPermissoes(uid, Action.BUSCAR_SERVICO);
         var servico = listarServicos().stream().filter(s -> s.id.equals(id)).findFirst();
         if (!servico.isPresent())
             throw new IllegalArgumentException("Serviço inexistente!");
@@ -81,32 +86,38 @@ public final class Sistema {
         return Servico.servicos;
     }
 
-    static void atualizarServico(String id, String novoNome) {
-        buscarServico(id).atualizarNome(novoNome);
+    static void atualizarServico(String uid, String id, String novoNome) {
+        checarPermissoes(uid, Action.ATUALIZAR_SERVICO);
+        buscarServico(uid, id).atualizarNome(novoNome);
     }
 
-    static void excluirServico(String id) {
-        listarServicos().remove(buscarServico(id));
+    static void excluirServico(String uid, String id) {
+        checarPermissoes(uid, Action.EXCLUIR_SERVICO);
+        listarServicos().remove(buscarServico(uid, id));
     }
 
     //
 
-    static Plano criarPlano(String idServico, String nome, double preco, int periodoPagamento) {
-        return new Plano(buscarServico(idServico), idServico, preco, periodoPagamento);
+    static Plano criarPlano(String uid, String idServico, String nome, double preco, int periodoPagamento) {
+        checarPermissoes(uid, Action.CRIAR_PLANO);
+        return new Plano(buscarServico(uid, idServico), idServico, preco, periodoPagamento);
     }
 
-    static Plano buscarPlano(String idServico, String idPlano) {
-        var plano = buscarServico(idServico).planos.stream().filter(p -> p.id.equals(idPlano)).findFirst();
+    static Plano buscarPlano(String uid, String idServico, String idPlano) {
+        var plano = buscarServico(uid, idServico).planos.stream().filter(p -> p.id.equals(idPlano)).findFirst();
         return plano.isPresent() ? plano.get() : null;
     }
 
-    static void atualizarPlano(String idServico, String idPlano, String nome, double preco, int periodoPagamento) {
-        buscarPlano(idServico, idPlano).setNome(nome).setPrecoEmReais(preco)
+    static void atualizarPlano(String uid, String idServico, String idPlano, String nome, double preco,
+            int periodoPagamento) {
+        checarPermissoes(uid, Action.ATUALIZAR_PLANO);
+        buscarPlano(uid, idServico, idPlano).setNome(nome).setPrecoEmReais(preco)
                 .setIntervaloPagamentoEmMeses(periodoPagamento);
     }
 
-    static void excluirPlano(String idServico, String idPlano) {
-        var plano = buscarPlano(idServico, idPlano);
+    static void excluirPlano(String uid, String idServico, String idPlano) {
+        checarPermissoes(uid, Action.EXCLUIR_PLANO);
+        var plano = buscarPlano(uid, idServico, idPlano);
         if (plano != null && plano.servico.planos.contains(plano))
             plano.servico.planos.remove(plano);
     }
@@ -114,13 +125,15 @@ public final class Sistema {
     // CLIENTE
 
     static void assinarPlano(String uid, String idServico, String idPlano) {
+        checarPermissoes(uid, Action.ASSINAR_PLANO);
         if (!isCliente(uid))
             return;
         var cliente = ((Cliente) buscarUsuario(uid));
-        cliente.assinarPlano(buscarPlano(idServico, idPlano));
+        cliente.assinarPlano(buscarPlano(uid, idServico, idPlano));
     }
 
     static List<Servico> listarServicosDisponiveis(String uid) {
+        checarPermissoes(uid, Action.LISTAR_SERVICOS_DISPONIVEIS);
         var user = (Cliente) buscarUsuario(uid);
         var servicos = listarServicos().stream()
                 .filter(s -> s.tipoServico == TipoServico.AMBOS ||
@@ -130,8 +143,18 @@ public final class Sistema {
     }
 
     static void cancelarAssinatura(String uid, String idServico, String idPlano) {
+        checarPermissoes(uid, Action.CANCELAR_ASSINATURA);
         var user = (Cliente) buscarUsuario(uid);
-        var plano = buscarPlano(idServico, idPlano);
+        var plano = buscarPlano(uid, idServico, idPlano);
         user.cancelarAssinatura(plano);
+    }
+
+    private static void checarPermissoes(Usuario usuario, Action acao) {
+        if (!usuario.hasPermission(acao))
+            throw new IllegalArgumentException();
+    }
+
+    private static void checarPermissoes(String uid, Action acao) {
+        checarPermissoes(buscarUsuario(uid), acao);
     }
 }
