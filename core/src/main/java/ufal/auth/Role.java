@@ -4,23 +4,23 @@ import java.util.*;
 
 public class Role {
   public static final Map<RoleNames, Role> roles = Map.of(
-      RoleNames.CLIENTE, new Role(RoleNames.CLIENTE).setPermissions(null),
-      RoleNames.ADMIN, new Role(RoleNames.ADMIN).setPermissions(null));
+      RoleNames.CLIENTE, new Role(RoleNames.CLIENTE).setPermissions(),
+      RoleNames.ADMIN, new Role(RoleNames.ADMIN).setPermissions());
   public final RoleNames name;
-  private final Set<Permission> permissions = new HashSet<>();
+  private final Set<Action> permissions = new HashSet<>();
 
   public Role(RoleNames name) {
     super();
     this.name = name;
   }
 
-  public Role setPermissions(Permission... permissions) {
-    for (Permission p : permissions)
+  public Role setPermissions(Action... permissions) {
+    for (Action p : permissions)
       this.permissions.add(p);
     return this;
   }
 
-  public Set<Permission> getPermissions() {
+  public Set<Action> getPermissions() {
     return permissions;
   }
 }

@@ -1,15 +1,12 @@
 package ufal;
 
 import java.util.*;
-import ufal.auth.*;
 
 public class Main {
-    static Map<ActionID, Action> actionMap = new HashMap<>();
     final static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
         try {
-            initialize();
             var user = askCredentials();
             if (user == null)
                 return;
@@ -67,15 +64,5 @@ public class Main {
                 System.out.println("Usuário inexistente ou dados incorretos!");
         } while (user == null);
         return user;
-    }
-
-    static void initialize() {
-        actionMap.put(ActionID.LISTAR_USUARIOS, Sistema::listarUsuarios);
-        var adminRole = new Role(RoleNames.ADMIN);
-        var clienteRole = new Role(RoleNames.CLIENTE);
-    }
-
-    static Action getAction(ActionID id) {
-        return actionMap.get(id);
     }
 }
