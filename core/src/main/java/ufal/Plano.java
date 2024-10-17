@@ -13,7 +13,7 @@ public class Plano {
         if (preco <= 0) {
             throw new IllegalArgumentException("O preço deve ser maior que zero.");
         }
-        if (nome.isEmpty()) {
+        if (nome == null || nome.isEmpty()) {
             throw new IllegalArgumentException("O nome do plano não pode ser vazio.");
         }
         if (servico != null)

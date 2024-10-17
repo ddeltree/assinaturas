@@ -1,8 +1,6 @@
 package ufal;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import ufal.auth.Role;
 
