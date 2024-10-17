@@ -2,6 +2,7 @@ package ufal;
 
 import java.util.*;
 
+import ufal.auth.Action;
 import ufal.auth.Role;
 import ufal.auth.RoleNames;
 
@@ -66,5 +67,13 @@ public class Usuario {
   private boolean isEmailValido(String email) {
     // TODO
     return true;
+  }
+
+  public boolean hasPermission(Action action) {
+    for (Action permission : getRole().getPermissions()) {
+      if (permission == action)
+        return true;
+    }
+    return false;
   }
 }

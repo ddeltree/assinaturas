@@ -13,8 +13,7 @@ public class PermissionTests {
     var user = new Usuario("1", "Davi", RoleNames.CLIENTE);
     user.getRole().setPermissions(Action.LISTAR_USUARIOS);
 
-    boolean canExecute = AuthorizationService
-        .hasPermission(user, Action.LISTAR_USUARIOS);
+    boolean canExecute = user.hasPermission(Action.LISTAR_USUARIOS);
 
     assertEquals(true, canExecute);
   }
