@@ -4,8 +4,8 @@ import java.util.*;
 
 public class Role {
   public static final Map<RoleNames, Role> roles = Map.of(
-      RoleNames.CLIENTE, new Role(RoleNames.CLIENTE),
-      RoleNames.ADMIN, new Role(RoleNames.ADMIN));
+      RoleNames.CLIENTE, new Role(RoleNames.CLIENTE).setPermissions(null),
+      RoleNames.ADMIN, new Role(RoleNames.ADMIN).setPermissions(null));
   public final RoleNames name;
   private final Set<Permission> permissions = new HashSet<>();
 

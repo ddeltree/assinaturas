@@ -16,10 +16,10 @@ public class PermissionTests {
     user.getRole().setPermissions(
         new Permission(
             Effect.EXECUTE,
-            Main.getAction(ActionID.LIST_USERS)));
+            Main.getAction(ActionID.LISTAR_USUARIOS)));
 
     boolean canExecute = AuthorizationService
-        .hasPermission(user, Effect.EXECUTE, Main.getAction(ActionID.LIST_USERS));
+        .hasPermission(user, Effect.EXECUTE, Main.getAction(ActionID.LISTAR_USUARIOS));
 
     assertEquals(true, canExecute);
   }

@@ -11,8 +11,9 @@ public class Main {
         try {
             initialize();
             var user = askCredentials();
-            if (user != null)
-                System.out.println(user.getRole());
+            if (user == null)
+                return;
+            System.out.println(user.getRole().getPermissions());
         } finally {
             sc.close();
         }
@@ -69,7 +70,7 @@ public class Main {
     }
 
     static void initialize() {
-        actionMap.put(ActionID.LIST_USERS, Sistema::listarUsuarios);
+        actionMap.put(ActionID.LISTAR_USUARIOS, Sistema::listarUsuarios);
         var adminRole = new Role(RoleNames.ADMIN);
         var clienteRole = new Role(RoleNames.CLIENTE);
     }
