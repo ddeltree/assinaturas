@@ -2,15 +2,24 @@ package ufal;
 
 import java.util.*;
 
+import ufal.auth.RoleNames;
+
 public final class Sistema {
     private static final Map<String, Usuario> userMap = new HashMap<>();
-    private static final Map<String, Plano> planoMap = new HashMap<>();
 
     // CADASTRO
 
-    static Usuario signupUser(String email, String password) {
-        if (!userMap.containsKey(email))
-            userMap.put(email, new Usuario(email, password));
+    static Usuario signupUser(String email, String password, String cadastro, boolean asAdm) {
+        if (!Utils.isCNPJValido(cadastro) && !Utils.isCPFValido(cadastro))
+            throw new IllegalArgumentException("O cadastro de pessoa não é válido!");
+        Usuario user = asAdm
+                ? new Usuario(email, password, RoleNames.ADMIN)
+                : Utils.isCPFValido(cadastro)
+                        ? Cliente.criarPorCPF(email, password, cadastro)
+                        : Cliente.criarPorCNPJ(email, password, cadastro);
+        if (!userMap.containsKey(email)) {
+            userMap.put(email, user);
+        }
         return userMap.get(email);
     }
 
@@ -39,8 +48,8 @@ public final class Sistema {
 
     //
 
-    static Servico criarServico(String nome) {
-        return new Servico(nome);
+    static Servico criarServico(String nome, TipoServico tipo) {
+        return new Servico(nome, tipo);
     }
 
     static Servico buscarServico(String id) {
@@ -79,45 +88,16 @@ public final class Sistema {
     }
 
     static void excluirPlano(String idServico, String idPlano) {
-        var servico = buscarServico(idServico);
-        var plano = buscarPlano(idPlano);
-        if (plano != null && servico != null && servico.planos.contains(plano))
-            servico.planos.remove(plano);
+        var plano = buscarPlano(idServico, idPlano);
+        if (plano != null && plano.servico.planos.contains(plano))
+            plano.servico.planos.remove(plano);
     }
 
     // CLIENTE
 
-    public static void criarPlano(Servico servico, String nome, double preco, int periodoPagamento) {
-        if (planoMap.containsKey(nome)) {
-            throw new IllegalArgumentException("Plano com esse nome já existe.");
-        }
-        planoMap.put(nome, new Plano(servico, nome, preco, periodoPagamento));
-        System.out.println("Plano criado com sucesso: " + nome);
-    }
+    static void assinarPlano(String uid, String idServico, String idPlano) {
+        var user = listarUsuarios().stream().filter(u -> u.getUID().equals(uid)).findFirst().get();
 
-    public static List<Plano> listarPlanos() {
-        return new ArrayList<>(planoMap.values());
-    }
-
-    public static void atualizarPlano(String nome, double novoPreco, int novoPeriodoPagamento) {
-        Plano plano = planoMap.get(nome);
-        if (plano == null) {
-            throw new IllegalArgumentException("Plano não encontrado.");
-        }
-        plano.setPrecoEmReais(novoPreco);
-        plano.setIntervaloPagamentoEmMeses(novoPeriodoPagamento);
-        System.out.println("Plano atualizado com sucesso: " + nome);
-    }
-
-    public static void removerPlano(String nome) {
-        if (!planoMap.containsKey(nome)) {
-            throw new IllegalArgumentException("Plano não encontrado.");
-        }
-        planoMap.remove(nome);
-        System.out.println("Plano removido com sucesso: " + nome);
-    }
-
-    public static Plano buscarPlano(String nome) {
-        return planoMap.get(nome);
+        // buscarPlano(idServico, idPlano).
     }
 }

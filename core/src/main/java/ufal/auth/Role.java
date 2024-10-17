@@ -3,10 +3,13 @@ package ufal.auth;
 import java.util.*;
 
 public class Role {
-  final String name;
+  public static final Map<RoleNames, Role> roles = Map.of(
+      RoleNames.CLIENTE, new Role(RoleNames.CLIENTE),
+      RoleNames.ADMIN, new Role(RoleNames.ADMIN));
+  public final RoleNames name;
   private final Set<Permission> permissions = new HashSet<>();
 
-  public Role(String name) {
+  public Role(RoleNames name) {
     super();
     this.name = name;
   }

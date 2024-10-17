@@ -12,12 +12,11 @@ public class PermissionTests {
   public void basic() {
     Main.initialize();
 
-    var user = new Usuario("1", "Davi");
-    var role = new Role("ADMIN")
-        .setPermissions(new Permission(
+    var user = new Usuario("1", "Davi", RoleNames.CLIENTE);
+    user.getRole().setPermissions(
+        new Permission(
             Effect.EXECUTE,
             Main.getAction(ActionID.LIST_USERS)));
-    user.getRoles().add(role);
 
     boolean canExecute = AuthorizationService
         .hasPermission(user, Effect.EXECUTE, Main.getAction(ActionID.LIST_USERS));

@@ -12,7 +12,7 @@ public class Main {
             initialize();
             var user = askCredentials();
             if (user != null)
-                System.out.println(user.getRoles());
+                System.out.println(user.getRole());
         } finally {
             sc.close();
         }
@@ -49,7 +49,7 @@ public class Main {
         } while (Sistema.doesUserExist(email));
         System.out.print("Senha: ");
         var senha = sc.next();
-        var user = Sistema.signupUser(email, senha);
+        var user = Sistema.signupUser(email, senha, "abc", false);
         return user;
     }
 
@@ -70,8 +70,8 @@ public class Main {
 
     static void initialize() {
         actionMap.put(ActionID.LIST_USERS, Sistema::listarUsuarios);
-        var adminRole = new Role("ADMIN");
-        var clienteRole = new Role("CLIENTE");
+        var adminRole = new Role(RoleNames.ADMIN);
+        var clienteRole = new Role(RoleNames.CLIENTE);
     }
 
     static Action getAction(ActionID id) {

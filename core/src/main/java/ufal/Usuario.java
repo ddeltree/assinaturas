@@ -3,24 +3,25 @@ package ufal;
 import java.util.*;
 
 import ufal.auth.Role;
+import ufal.auth.RoleNames;
 
 public class Usuario {
   private final String uid;
   private String nome;
   private String email;
   private String senha;
-  private final Set<Role> roles = new HashSet<>();
+  private final Role role;
 
-  public Usuario(String email, String senha) {
+  public Usuario(String email, String senha, RoleNames roleName) {
     super();
     this.email = email; // TODO validar
     this.senha = senha; // TODO validar
-    UUID uuid = UUID.randomUUID();
-    this.uid = uuid.toString();
+    this.uid = UUID.randomUUID().toString();
+    this.role = new Role(roleName);
   }
 
-  public Set<Role> getRoles() {
-    return roles;
+  public Role getRole() {
+    return role;
   }
 
   public boolean verificarLogin(String email, String senha) {

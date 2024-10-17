@@ -2,22 +2,24 @@ package ufal;
 
 import java.util.*;
 
+import ufal.auth.RoleNames;
+
 public class Cliente extends Usuario {
   public final List<Plano> assinaturas = new ArrayList<>();
   public final String cadastroDePessoa;
 
   private Cliente(String email, String senha, String cadastro) {
-    super(email, senha);
+    super(email, senha, RoleNames.CLIENTE);
     cadastroDePessoa = cadastro;
   }
 
-  public Cliente criarPorCPF(String email, String senha, String CPF) {
+  public static Cliente criarPorCPF(String email, String senha, String CPF) {
     if (!Utils.isCPFValido(CPF))
       throw new IllegalArgumentException("O CPF é inválido!");
     return new Cliente(email, senha, CPF);
   }
 
-  public Cliente criarPorCNPJ(String email, String senha, String CNPJ) {
+  public static Cliente criarPorCNPJ(String email, String senha, String CNPJ) {
     if (!Utils.isCNPJValido(CNPJ))
       throw new IllegalArgumentException("O CNPJ é inválido!");
     return new Cliente(email, senha, CNPJ);
