@@ -1,20 +1,27 @@
 package ufal;
 
+import java.util.*;
+
 public class Plano {
     private String nome;
-    private double preco;
-    private String periodoPagamento;
+    private double precoEmReais;
+    private int intervaloPagamentoEmMeses;
+    public final Servico servico;
+    public final List<Usuario> assinantes = new ArrayList<>();
 
-    public Plano(String nome, double preco, String periodoPagamento) {
+    public Plano(Servico servico, String nome, double preco, int periodoPagamento) {
         if (preco <= 0) {
             throw new IllegalArgumentException("O preço deve ser maior que zero.");
         }
-        if (nome == null || nome.isEmpty()) {
+        if (nome.isEmpty()) {
             throw new IllegalArgumentException("O nome do plano não pode ser vazio.");
         }
+        if (servico != null)
+            servico.planos.add(this);
+        this.servico = servico;
         this.nome = nome;
-        this.preco = preco;
-        this.periodoPagamento = periodoPagamento;
+        this.precoEmReais = preco;
+        this.intervaloPagamentoEmMeses = periodoPagamento;
     }
 
     public String getNome() {
@@ -25,20 +32,21 @@ public class Plano {
         this.nome = nome;
     }
 
-    public double getPreco() {
-        return preco;
+    public double getPrecoEmReais() {
+        return precoEmReais;
     }
 
-    public void setPreco(double preco) {
-        this.preco = preco;
+    public void setPrecoEmReais(double preco) {
+        this.precoEmReais = Math.max(0, preco);
     }
 
-    public String getPeriodoPagamento() {
-        return periodoPagamento;
+    public int getIntervaloPagamentoEmMeses() {
+        return intervaloPagamentoEmMeses;
     }
 
-    public void setPeriodoPagamento(String periodoPagamento) {
-        this.periodoPagamento = periodoPagamento;
+    public void setIntervaloPagamentoEmMeses(int meses) {
+        if (meses <= 0)
+            throw new IllegalArgumentException("O período de pagamento não pode ser menor que 1 mês");
+        this.intervaloPagamentoEmMeses = meses;
     }
 }
-

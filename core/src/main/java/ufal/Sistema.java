@@ -3,24 +3,24 @@ package ufal;
 import java.util.*;
 
 public final class Sistema {
-    private static final Map<String, User> userMap = new HashMap<>();
+    private static final Map<String, Usuario> userMap = new HashMap<>();
     private static final Map<String, Plano> planoMap = new HashMap<>();
 
-    static List<User> listUsers() {
+    static List<Usuario> listUsers() {
         return userMap.values().stream().toList();
     }
 
-    static User signupUser(String email, String password) {
+    static Usuario signupUser(String email, String password) {
         if (!userMap.containsKey(email))
-            userMap.put(email, new User(email, password));
+            userMap.put(email, new Usuario(email, password));
         return userMap.get(email);
     }
 
-    static User loginUser(String email, String password) {
+    static Usuario loginUser(String email, String password) {
         if (!userMap.containsKey(email))
             return null;
         var user = userMap.get(email);
-        if (!user.verifyLogin(email, password))
+        if (!user.verificarLogin(email, password))
             return null;
         return user;
     }
@@ -29,15 +29,15 @@ public final class Sistema {
         return userMap.containsKey(email);
     }
 
-    static boolean doesUserExist(User user) {
+    static boolean doesUserExist(Usuario user) {
         return userMap.containsValue(user);
     }
 
-    public static void criarPlano(String nome, double preco, String periodoPagamento) {
+    public static void criarPlano(Servico servico, String nome, double preco, int periodoPagamento) {
         if (planoMap.containsKey(nome)) {
             throw new IllegalArgumentException("Plano com esse nome já existe.");
         }
-        planoMap.put(nome, new Plano(nome, preco, periodoPagamento));
+        planoMap.put(nome, new Plano(servico, nome, preco, periodoPagamento));
         System.out.println("Plano criado com sucesso: " + nome);
     }
 
@@ -45,13 +45,13 @@ public final class Sistema {
         return new ArrayList<>(planoMap.values());
     }
 
-    public static void atualizarPlano(String nome, double novoPreco, String novoPeriodoPagamento) {
+    public static void atualizarPlano(String nome, double novoPreco, int novoPeriodoPagamento) {
         Plano plano = planoMap.get(nome);
         if (plano == null) {
             throw new IllegalArgumentException("Plano não encontrado.");
         }
-        plano.setPreco(novoPreco);
-        plano.setPeriodoPagamento(novoPeriodoPagamento);
+        plano.setPrecoEmReais(novoPreco);
+        plano.setIntervaloPagamentoEmMeses(novoPeriodoPagamento);
         System.out.println("Plano atualizado com sucesso: " + nome);
     }
 

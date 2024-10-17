@@ -12,7 +12,7 @@ public class PermissionTests {
   public void basic() {
     Main.initialize();
 
-    var user = new User("1", "Davi");
+    var user = new Usuario("1", "Davi");
     var role = new Role("ADMIN")
         .setPermissions(new Permission(
             Effect.EXECUTE,

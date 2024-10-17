@@ -18,9 +18,9 @@ public class Main {
         }
     }
 
-    static User askCredentials() {
+    static Usuario askCredentials() {
         int option = 0;
-        User user = null;
+        Usuario user = null;
         boolean isSignedIn = false;
         do {
             System.out.println("* (1) - LOGIN");
@@ -37,7 +37,7 @@ public class Main {
         return user;
     }
 
-    static User signupScreen() {
+    static Usuario signupScreen() {
         System.out.println("--- CADASTRO ---");
         String email;
         do {
@@ -53,9 +53,9 @@ public class Main {
         return user;
     }
 
-    static User loginScreen() {
+    static Usuario loginScreen() {
         System.out.println("--- LOGIN ---");
-        User user = null;
+        Usuario user = null;
         do {
             System.out.print("Email: ");
             var email = sc.next();

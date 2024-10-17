@@ -1,9 +1,9 @@
 package ufal.auth;
 
-import ufal.User;
+import ufal.Usuario;
 
 public class AuthorizationService {
-  public static boolean hasPermission(User user, Effect effect, Action action) {
+  public static boolean hasPermission(Usuario user, Effect effect, Action action) {
     for (Role role : user.getRoles()) {
       for (Permission permission : role.getPermissions()) {
         if (permission.getEffect() == effect && permission.getAction() == action)
