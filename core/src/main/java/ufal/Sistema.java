@@ -40,13 +40,31 @@ public final class Sistema {
         return userMap.containsValue(user);
     }
 
+    static void alterarDadosCadastrais(String uid, String nome, String email, String senha) {
+        var user = buscarUsuario(uid);
+        user.atualizarNome(nome).atualizarEmail(email).mudarSenha(senha);
+    }
+
     // ADMINISTRADOR
 
     static List<Usuario> listarUsuarios() {
         return userMap.values().stream().toList();
     }
 
-    //
+    static Usuario buscarUsuario(String uid) {
+        return listarUsuarios().stream().filter(u -> u.getUID().equals(uid)).findFirst().get();
+    }
+
+    static boolean isCliente(String uid) {
+        var user = buscarUsuario(uid);
+        if (user.getRole().name == RoleNames.CLIENTE || user instanceof Cliente) {
+            assert user instanceof Cliente;
+            assert user.getRole().name == RoleNames.CLIENTE;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     static Servico criarServico(String nome, TipoServico tipo) {
         return new Servico(nome, tipo);
@@ -96,8 +114,24 @@ public final class Sistema {
     // CLIENTE
 
     static void assinarPlano(String uid, String idServico, String idPlano) {
-        var user = listarUsuarios().stream().filter(u -> u.getUID().equals(uid)).findFirst().get();
+        if (!isCliente(uid))
+            return;
+        var cliente = ((Cliente) buscarUsuario(uid));
+        cliente.assinarPlano(buscarPlano(idServico, idPlano));
+    }
 
-        // buscarPlano(idServico, idPlano).
+    static List<Servico> listarServicosDisponiveis(String uid) {
+        var user = (Cliente) buscarUsuario(uid);
+        var servicos = listarServicos().stream()
+                .filter(s -> s.tipoServico == TipoServico.AMBOS ||
+                        (s.tipoServico == TipoServico.CPF) && user.isPessoaFisica() ||
+                        (s.tipoServico == TipoServico.CNPJ) && user.isPessoaJuridica());
+        return servicos.toList();
+    }
+
+    static void cancelarAssinatura(String uid, String idServico, String idPlano) {
+        var user = (Cliente) buscarUsuario(uid);
+        var plano = buscarPlano(idServico, idPlano);
+        user.cancelarAssinatura(plano);
     }
 }

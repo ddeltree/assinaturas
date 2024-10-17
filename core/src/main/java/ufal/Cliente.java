@@ -40,12 +40,9 @@ public class Cliente extends Usuario {
     assinaturas.add(plano);
   }
 
-  public void cancelarAssinatura(Plano plano) throws Exception {
-    if (plano.assinantes.contains(this)) {
-      plano.assinantes.remove(this);
-      assinaturas.remove(plano);
-    } else {
-      throw new Exception("Erro inesperado do sistema!");
-    }
+  public void cancelarAssinatura(Plano plano) {
+    assert plano.assinantes.contains(this);
+    plano.assinantes.remove(this);
+    assinaturas.remove(plano);
   }
 }
